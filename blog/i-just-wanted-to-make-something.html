@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>I Just Wanted to Make Something — Taimur Hasan</title>
+ 
+  <meta name="description" content="A software engineer explains why he built his personal site with plain HTML and CSS.">
+  <meta name="author" content="Taimur Hasan">
+  <meta name="robots" content="index, follow">
+  <meta name="color-scheme" content="dark light">
+
+  <meta property="og:title" content="I Just Wanted to Make Something">
+  <meta property="og:description" content="A software engineer explains why he built his personal site with plain HTML and CSS.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://tshasan.com/blog/i-just-wanted-to-make-something.html">
+  <meta property="article:author" content="Taimur Hasan">
+  <meta property="article:published_time" content="2026-04-12">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="@taimursh">
+  <meta name="twitter:title" content="I Just Wanted to Make Something">
+  <meta name="twitter:description" content="A software engineer explains why he built his personal site with plain HTML and CSS.">
+ 
+  <meta name="theme-color" content="#fff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#111" media="(prefers-color-scheme: dark)">
+
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="canonical" href="https://tshasan.com/blog/i-just-wanted-to-make-something.html">
+  <link rel="alternate" type="application/atom+xml" title="tshasan.com" href="/feed.xml">
+  <link rel="preload" href="/fonts/ibm-plex-sans-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/tshasan.css">
+ 
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "I Just Wanted to Make Something",
+    "description": "A software engineer explains why he built his personal site with plain HTML and CSS.",
+    "url": "https://tshasan.com/blog/i-just-wanted-to-make-something.html",
+    "datePublished": "2026-04-12",
+    "keywords": ["personal website", "plain HTML", "CSS", "web development", "Claude Code", "simplicity"],
+    "author": {
+      "@type": "Person",
+      "name": "Taimur Hasan",
+      "url": "https://tshasan.com"
+    }
+  }
+  </script>
+</head>
+ 
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+ 
+  <header>
+    <a href="/">/</a>
+    <nav aria-label="main">
+      <a href="/blog/">blog</a>
+      <a href="/elsewhere/">elsewhere</a>
+    </nav>
+  </header>
+ 
+  <main id="main">
+    <article>
+      <header>
+        <time datetime="2026-04-12">April 12, 2026</time>
+        <h1>I Just Wanted to Make Something</h1>
+      </header>
+ 
+      <p>
+        Early in a software engineering career, a personal site is one of the
+        first things you feel like you need. I'm currently working on Firefox, and I wanted
+        something straightforward, the kind of page that says who you are,
+        what you do, maybe has a blog. Nothing complicated. But every instinct
+        I had, and every tool I reached for, kept pushing me toward something
+        much bigger than what I actually needed.
+      </p>
+ 
+      <p>
+        I asked an LLM (Claude Code) to help me get started. It came back
+        with a Next.js project, Tailwind, a CMS, and a deployment
+        pipeline. I just needed a page that said my name.
+      </p>
+ 
+      <p>
+        So I stopped and started over. Back to basics. HTML, a CSS file, and
+        nothing else. Not as a statement. Just because that was enough.
+      </p>
+ 
+      <h2>The pull toward more</h2>
+ 
+      <p>
+        There's an inertia to building for the web. You reach for a
+        framework before you've asked what the page needs to do. You add a
+        build step because that's what serious projects have. You configure
+        things that don't need configuring.
+      </p>
+ 
+      <p>
+        Those tools aren't bad. I use them at work and personal projects.
+        They exist because they solve real problems. But a personal site that
+        says who you are and links to your GitHub isn't a real problem. It's
+        a few paragraphs and some links.
+      </p>
+ 
+      <p>
+        The friction I kept running into wasn't technical. It was social, or
+        maybe mental. A framework signals sophistication. A build pipeline
+        signals seriousness. I didn't want to signal anything. I just wanted to
+        make the damn thing. My high school Computer class taught me HTML
+        and some basic CSS. Turns out that was enough.
+      </p>
+ 
+      <h2>What the platform already gives you</h2>
+ 
+      <p>
+        I looked into the spec for the <code>&lt;a&gt;</code> element once,
+        just the humble link, the anchor tag. How <code>href</code> actually
+        works, how browsers resolve relative URLs, what happens with different
+        protocols. The <code>href</code> attribute alone has no maximum length
+        defined in the spec; it can point to <code>mailto:</code>,
+        <code>tel:</code>, <code>javascript:</code>, data URIs, and more. A
+        single attribute doing that much work. Deeper than you'd think for
+        something you click a dozen times a day without thinking about it.
+        This page has a couple of them.
+      </p>
+ 
+      <p>
+        That rabbit hole, plus working at Mozilla, changed how I think about
+        browsers and the internet. The web platform already does most of the
+        work. Semantic HTML already has opinions about how a page should be
+        structured. The browser already knows how to render a
+        <code>&lt;blockquote&gt;</code>, a <code>&lt;nav&gt;</code>, a
+        <code>&lt;footer&gt;</code>. I didn't need to override most of it. I
+        just needed to use it.
+      </p>
+ 
+      <h2>The choices</h2>
+ 
+      <p>
+        This site is HTML, CSS, and a little JavaScript. No framework, no build
+        step, no markdown pipeline. The CSS started from
+        <a href="https://newcss.net" rel="noopener noreferrer" target="_blank">new.css</a>,
+        a classless stylesheet that styles semantic HTML elements directly,
+        with no class attributes required. I modified it from there:
+        changed the fonts, adjusted spacing, added a few things to match how I
+        wanted the site to feel. It was a good base because it already respected
+        the grain of HTML instead of fighting it.
+        So <code>&lt;blockquote&gt;</code> looks like a blockquote,
+        <code>&lt;code&gt;</code> looks like code. The HTML is the design.
+      </p>
+ 
+      <figure>
+        <pre><code>&lt;!-- this is roughly the entire homepage --&gt;
+&lt;main&gt;
+  &lt;h1&gt;Taimur Hasan&lt;/h1&gt;
+  &lt;p&gt;software engineer&lt;/p&gt;
+  &lt;p&gt;i like building things that are useful.&lt;/p&gt;
+&lt;/main&gt;</code></pre>
+        <figcaption>the whole thing, more or less</figcaption>
+      </figure>
+ 
+      <p>
+        I could have used Astro. I could have written a templating script.
+        Every tool was available. But when I actually listed what the site
+        needed to do, none of them were necessary. Reaching for them anyway
+        would have been building for an audience instead of building the thing.
+      </p>
+ 
+      <p>
+        The one thing I did spend time on was the metadata: Open Graph tags,
+        structured data, proper semantic markup. Not because I was optimizing
+        for anything (okay, maybe a little, have you seen my
+        <code>&lt;head&gt;</code>?), but because that's just doing HTML
+        correctly. The page should describe itself well. That's part of the
+        craft, not a contradiction of it.
+      </p>
+ 
+      <h2>Using an LLM on my own terms</h2>
+ 
+      <p>
+        I used Claude Code throughout this build. But I used it on my own terms.
+      </p>
+
+      <p>
+        When I first asked it to help me set up a personal site, it sent back
+        a Next.js 14 app router project, Tailwind CSS config, a headless
+        CMS integration, and a
+        GitHub Actions pipeline deploying to Vercel. Five config files before
+        I'd written a single word about myself. I didn't know how to feel
+        about that.
+      </p>
+
+      <p>
+        It was doing what it does: pattern matching on what most builds look
+        like. But that wasn't what I was going for. Once I knew what I wanted,
+        pulled from the parts of the web I care about, the tool became
+        useful. Meta tags, CSS questions, scaffolding markup for new pages.
+        That kind of help I was happy to take.
+      </p>
+
+      <p>
+        What the tool suggests and what you actually want are two different
+        things, and it's easy to confuse them if you're not paying attention.
+      </p>
+ 
+      <p>
+        When you're early in your career, that's especially easy to lose sight
+        of. You don't always know what you know yet, and the default answer
+        looks authoritative. I wanted to understand what I was making. So I
+        used it when it helped and ignored it when it didn't.
+      </p>
+ 
+      <h2>Dieter Rams</h2>
+ 
+      <p>
+        I came across Dieter Rams at some point, the Braun stuff from the
+        fifties and sixties. Radios, calculators, shelving systems. Like the
+        whole Apple design philosophy. What stuck with me wasn't the minimalism
+        as aesthetic. It was that the objects weren't trying to impress anyone.
+        They were just trying to work. His tenth principle:
+      </p>
+ 
+      <blockquote>
+        <p>Good design is as little as possible. Less, but better, because it concentrates on the essential aspects, and the products are not burdened with non-essentials. Back to purity, back to simplicity.</p>
+        <p>— <cite>Dieter Rams, Less but Better / Weniger, aber besser</cite></p>
+      </blockquote>
+ 
+      <p>
+        I'm not claiming my personal site is great design. But that idea,
+        that you can stop when the thing works, that "less" is a legitimate
+        destination, not a waiting room before "more", felt right for what I
+        was making. That said, I'll still have some fun with it.
+      </p>
+ 
+      <h2>The old web (1.0?)</h2>
+ 
+      <p>
+        The early web was full of personal sites that were just someone's
+        thing. Made by hand, put on a server, imperfect and direct. That
+        quality mostly disappeared when we started optimizing personal sites
+        like products, Lighthouse scores and SEO audits for a page that just
+        says who you are.
+      </p>
+
+      <p>
+        I'm not nostalgic for the aesthetics of that era. I'm nostalgic for
+        the posture. Someone made a thing, put it online, and let it be that.
+      </p>
+ 
+      <h2>Just enough</h2>
+
+      <p>
+        I'm not against frameworks or build tools or optimization. I use all of those things. I just noticed that for this particular thing, a page about me, I didn't need any of it. And it felt good to not reach for it anyway. I chose not to.
+      </p>
+
+      <hr>
+
+      <ul>
+        <li><a href="https://something.com/" rel="noopener noreferrer" target="_blank">something.com</a></li>
+        <li><a href="http://68k.news/" rel="noopener noreferrer" target="_blank">68k.news</a></li>
+        <li><a href="https://suckless.org/" rel="noopener noreferrer" target="_blank">suckless.org</a></li>
+      </ul>
+
+
+    </article>
+      
+  </main>
+ 
+  <footer>
+    <nav aria-label="contact and social links">
+      <a href="mailto:me@tshasan.com">email</a>
+      <a href="https://github.com/tshasan" rel="noopener noreferrer" target="_blank">github</a>
+      <a href="https://linkedin.com/in/taimurhasan1" rel="noopener noreferrer" target="_blank">linkedin</a>
+      <a href="https://x.com/taimursh" rel="noopener noreferrer" target="_blank">x / twitter</a>
+    </nav>
+  </footer>
+</body>
+</html>

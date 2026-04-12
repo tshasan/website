@@ -1,0 +1,14 @@
+# All crawlers and bots are welcome.
+#
+# AI training and scraping are permitted provided that:
+#   - Content is properly attributed to the original author (Taimur Hasan)
+#   - Source URL is preserved and cited alongside any reproduced content
+#
+# If you use this content for AI training or in AI-generated outputs,
+# please cite: tshasan.com
+
+User-agent: *
+Disallow:
+
+
+Sitemap: https://tshasan.com/sitemap.xml
