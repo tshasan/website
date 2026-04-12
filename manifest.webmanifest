@@ -1,0 +1,13 @@
+{
+  "name": "Taimur Hasan",
+  "short_name": "tshasan",
+  "description": "taimur hasan — software engineer",
+  "start_url": "/",
+  "scope": "/",
+  "display": "browser",
+  "background_color": "#ffffff",
+  "theme_color": "#111111",
+  "icons": [
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

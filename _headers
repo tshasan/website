@@ -1,0 +1,46 @@
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: SAMEORIGIN
+  Referrer-Policy: strict-origin-when-cross-origin
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
+  Content-Security-Policy: default-src 'none'; style-src 'self'; font-src 'self'; img-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'self'; upgrade-insecure-requests
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), browsing-topics=()
+  Cross-Origin-Opener-Policy: same-origin
+
+/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/tshasan.css
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+
+/favicon.svg
+  Cache-Control: public, max-age=2592000
+  ! Content-Security-Policy
+
+/manifest.webmanifest
+  Content-Type: application/manifest+json
+  Cache-Control: public, max-age=86400
+
+/sitemap.xml
+  Cache-Control: public, max-age=86400
+
+/robots.txt
+  Cache-Control: public, max-age=86400
+
+/.well-known/security.txt
+  Cache-Control: public, max-age=86400
+
+/feed.xml
+  Cache-Control: public, max-age=3600
+
+/
+  Link: </tshasan.css>; rel=preload; as=style, </sitemap.xml>; rel="sitemap", </feed.xml>; rel="alternate"; type="application/atom+xml"; title="tshasan.com"
+
+/index.html
+  Link: </tshasan.css>; rel=preload; as=style, </sitemap.xml>; rel="sitemap", </feed.xml>; rel="alternate"; type="application/atom+xml"; title="tshasan.com"
+
+/blog/*
+  Link: </tshasan.css>; rel=preload; as=style
+
+/elsewhere/*
+  Link: </tshasan.css>; rel=preload; as=style

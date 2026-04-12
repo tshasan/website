@@ -1,0 +1,726 @@
+/* tshasan.css — monochrome classless stylesheet */
+
+/* Cross-document view transitions (Chrome 126+, Safari 18.2+; Firefox pending) */
+@view-transition {
+  navigation: auto;
+}
+
+@layer reset, base, print;
+
+/* Layout skeleton — un-layered so nothing can override it */
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+}
+
+main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+body > header {
+  flex-shrink: 0;
+}
+
+body > footer {
+  flex-shrink: 0;
+}
+
+/* Named transition groups: header and footer hold still between pages,
+   only main crossfades. */
+body > header { view-transition-name: site-header; }
+body > footer { view-transition-name: site-footer; }
+main          { view-transition-name: main; }
+
+/* The universal reduced-motion rule below cannot reach the ::view-transition
+   pseudo-tree, so it is switched off here explicitly. */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
+
+@font-face {
+  font-family: 'IBM Plex Sans';
+  src: url('/fonts/ibm-plex-sans-400.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'IBM Plex Sans';
+  src: url('/fonts/ibm-plex-sans-600.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Only fetched on pages that actually contain italic text */
+@font-face {
+  font-family: 'IBM Plex Sans';
+  src: url('/fonts/ibm-plex-sans-400-italic.woff2') format('woff2');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* Metric-compatible stand-in shown while Plex loads. The overrides are
+   computed from the font files so the swap does not move a single line. */
+@font-face {
+  font-family: 'IBM Plex Sans Fallback';
+  src: local('Arial'), local('Helvetica Neue'), local('Helvetica'), local('Liberation Sans');
+  size-adjust: 101.57%;
+  ascent-override: 100.92%;
+  descent-override: 27.07%;
+  line-gap-override: 0%;
+}
+
+:root {
+  --font-sans: 'IBM Plex Sans', 'IBM Plex Sans Fallback', sans-serif;
+  --font-mono: ui-monospace, 'SF Mono', Consolas, 'Liberation Mono', monospace;
+
+  /* light-dark() — Baseline 2023 (Firefox 120+ / Chrome 111+), no fallback needed */
+  --tx:       light-dark(#111, #eee);
+  --tx-muted: light-dark(#666, #888);
+  --bg:       light-dark(#fff, #111);
+  --surface:  light-dark(#f5f5f5, #1a1a1a);
+  --border:   light-dark(#ddd, #333);
+
+  color-scheme: dark light;
+  accent-color: light-dark(#111, #eee);
+
+  /* Proportions. The golden ratio sets the leading; the type scale steps
+     by its square root so two steps span one φ; every vertical distance is
+     a quarter, half, or whole root line. */
+  --phi: 1.618;
+  --lh:  calc(var(--phi) * 1rem);       /* one root line; equals 1rlh, but supported everywhere */
+  --step: 1.272;                          /* √φ */
+  --s-1: calc(1rem / var(--step));        /* small print */
+  --s1:  calc(1rem * var(--step));        /* h3 */
+  --s2:  calc(1rem * var(--phi));         /* h2 */
+  --s3:  calc(1rem * var(--phi) * var(--step)); /* h1 */
+  --measure: 40rem;
+
+  font-size: 105%;
+  line-height: var(--phi);
+
+  /* Reserve the scrollbar gutter so page width does not jump between
+     short and long pages (classic scrollbars only; overlay ones are unaffected). */
+  scrollbar-gutter: stable;
+}
+
+/* Users who ask for more contrast get darker muted text and borders. */
+@media (prefers-contrast: more) {
+  :root {
+    --tx-muted: light-dark(#444, #bbb);
+    --border:   light-dark(#888, #777);
+  }
+}
+
+@layer reset {
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+}
+
+@layer base {
+  /* Flow spacing */
+  address, article, aside, blockquote, details,
+  dl, fieldset, figure, form,
+  iframe, img, meter, nav, ol, p,
+  pre, progress, section, table,
+  textarea, ul, video {
+    margin-bottom: var(--lh);
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--tx);
+    font-family: var(--font-sans);
+    font-synthesis: none; /* real 600 and italic faces exist; never fake them */
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+    overflow-wrap: break-word;
+  }
+
+  main {
+    max-width: var(--measure);
+    width: 100%;
+    margin: 0 auto;
+    padding: calc(1.5 * var(--lh)) var(--lh);
+
+    & > *:first-child { margin-top: 0; }
+    & > *:last-child  { margin-bottom: 0; }
+  }
+
+  input, select, button, textarea {
+    font-family: var(--font-sans);
+  }
+
+  ::selection {
+    background: var(--tx);
+    color: var(--bg);
+  }
+
+  /* Text-fragment links (#:~:text=...) highlight in the same monochrome */
+  ::target-text {
+    background: var(--tx);
+    color: var(--bg);
+  }
+
+  /* Keyboard focus — one rule for every focusable thing */
+  :focus-visible {
+    outline: 2px solid var(--tx);
+    outline-offset: 2px;
+  }
+
+  /* Deep links: leave breathing room above the target and mark it */
+  :target {
+    scroll-margin-top: var(--lh);
+  }
+
+  h2:target, h3:target {
+    border-bottom-color: var(--tx);
+  }
+
+  /* Headings */
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+    /* snap each heading's line box to the quarter-line grid */
+    line-height: round(up, 1.1em, .25 * var(--lh));
+    color: var(--tx);
+    text-wrap: balance;
+    margin-top: calc(1.5 * var(--lh));
+    margin-bottom: calc(.5 * var(--lh));
+  }
+
+  /* Trim the half-leading above cap height so headings sit flush.
+     Chrome 133+, Safari 18.2+, Firefox 154+. */
+  @supports (text-box-trim: trim-both) {
+    h1, h2, h3, h4, h5, h6 {
+      text-box-trim: trim-both;
+      text-box-edge: cap text;
+    }
+  }
+
+  h1, h2, h3 {
+    padding-bottom: calc(.25 * var(--lh) - 1px); /* the hairline stays on the grid */
+    border-bottom: 1px solid var(--border);
+  }
+
+  h4, h5, h6 {
+    margin-bottom: calc(.25 * var(--lh));
+  }
+
+  h1 { font-size: var(--s3); letter-spacing: -.01em; }
+  h2 { font-size: var(--s2); letter-spacing: -.01em; }
+  h3 { font-size: var(--s1); }
+  h4, h5, h6 { font-size: 1rem; }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* Links — monochrome underline, no color */
+  a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1px;
+    text-decoration-color: var(--border);
+
+    &:hover {
+      text-decoration-color: var(--tx);
+      text-decoration-thickness: 2px;
+    }
+  }
+
+  abbr {
+    cursor: help;
+    text-decoration: underline dotted;
+  }
+
+  time {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Site header — naturally full-width; padding aligns content to the 680px column */
+  body > header {
+    padding: calc(.5 * var(--lh)) max(var(--lh), calc(50vw - var(--measure) / 2));
+    border-bottom: 1px solid var(--border);
+
+    /* :has() — add nav flex layout when a nav is present */
+    &:has(nav) {
+      display: flex;
+      align-items: center;
+      gap: var(--lh);
+    }
+
+    a {
+      font-size: var(--s-1);
+      color: var(--tx-muted);
+      text-decoration: none;
+
+      &:hover {
+        color: var(--tx);
+      }
+    }
+
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: calc(.25 * var(--lh)) calc(.75 * var(--lh));
+      margin-bottom: 0;
+
+      a {
+        text-decoration: none;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+
+    h1, h2, h3 {
+      border-bottom: 0;
+      padding-bottom: 0;
+      margin: 0;
+    }
+  }
+
+  /* Article header (blog post: time above h1) */
+  article > header {
+    margin-bottom: calc(1.5 * var(--lh));
+    border-bottom: 1px solid var(--border);
+    padding-bottom: calc(.5 * var(--lh) - 1px);
+
+    time {
+      display: block;
+      font-size: var(--s-1);
+      color: var(--tx-muted);
+      margin-bottom: calc(.25 * var(--lh));
+    }
+
+    h1 {
+      border-bottom: 0;
+      padding-bottom: 0;
+      margin-top: calc(.25 * var(--lh));
+    }
+  }
+
+  /* Footer — naturally full-width; same padding formula as header */
+  body > footer {
+    padding: calc(.5 * var(--lh)) max(var(--lh), calc(50vw - var(--measure) / 2));
+    border-top: 1px solid var(--border);
+    font-size: var(--s-1);
+    color: var(--tx-muted);
+
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: calc(.25 * var(--lh)) calc(.75 * var(--lh));
+      margin-bottom: 0;
+
+      a {
+        text-decoration: none;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+
+  /* Buttons */
+  button,
+  input[type="submit"],
+  input[type="reset"],
+  input[type="button"] {
+    font-size: var(--s-1);
+    display: inline-block;
+    padding: calc(.25 * var(--lh)) calc(.5 * var(--lh));
+    background: var(--tx);
+    color: var(--bg);
+    border: 1px solid var(--tx);
+    cursor: pointer;
+    white-space: nowrap;
+
+    &:hover:enabled {
+      background: var(--bg);
+      color: var(--tx);
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+      opacity: .4;
+    }
+  }
+
+  /* Code */
+  code, pre, kbd, samp {
+    font-family: var(--font-mono);
+  }
+
+  code, samp, kbd {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: .05em .3em;
+    font-size: calc(1em / var(--step));
+  }
+
+  kbd {
+    border-bottom-width: 3px;
+  }
+
+  pre {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: calc(.5 * var(--lh)) calc(.75 * var(--lh));
+    overflow: auto;
+    font-size: var(--s-1);
+    line-height: round(up, 1.5em, .25 * var(--lh));
+    tab-size: 2;
+
+    code {
+      background: none;
+      border: 0;
+      padding: 0;
+      font-size: inherit;
+    }
+  }
+
+  blockquote {
+    padding: calc(.5 * var(--lh)) calc(.75 * var(--lh));
+    border-left: 3px solid var(--border);
+    color: var(--tx-muted);
+
+    & > *:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  /* <details> — content fades in via ::details-content
+     (Chrome 131+, Firefox 143+, Safari 18.4+) */
+  details {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: calc(.25 * var(--lh)) calc(.5 * var(--lh));
+
+    summary {
+      cursor: pointer;
+      font-weight: 600;
+      list-style: none;
+      user-select: none;
+
+      &::marker,
+      &::-webkit-details-marker {
+        display: none;
+      }
+
+      &::before {
+        content: '+ ';
+        font-weight: 400;
+        color: var(--tx-muted);
+      }
+    }
+
+    &::details-content {
+      transition: opacity .2s ease, translate .2s ease;
+    }
+
+    &[open] {
+      padding-bottom: calc(.5 * var(--lh));
+
+      summary::before {
+        content: '− ';
+      }
+
+      & > *:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  @starting-style {
+    details[open]::details-content {
+      opacity: 0;
+      translate: 0 -.375rem;
+    }
+  }
+
+  hr {
+    border: 0;
+    border-bottom: 1px solid var(--border);
+    margin: var(--lh) 0;
+  }
+
+  dt {
+    font-weight: 600;
+  }
+
+  dd {
+    padding-left: var(--lh);
+
+    &::before {
+      content: '→ ';
+      color: var(--tx-muted);
+    }
+  }
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+
+    caption {
+      font-weight: 600;
+      text-align: left;
+      margin-bottom: calc(.25 * var(--lh));
+    }
+  }
+
+  th, td {
+    border: 1px solid var(--border);
+    padding: calc(.25 * var(--lh)) calc(.5 * var(--lh));
+    text-align: left;
+  }
+
+  th {
+    background: var(--surface);
+  }
+
+  tr:nth-child(even) {
+    background: var(--surface);
+  }
+
+  fieldset {
+    border: 1px solid var(--border);
+    padding: var(--lh);
+    margin-top: var(--lh);
+  }
+
+  legend {
+    padding: 0 calc(.25 * var(--lh));
+  }
+
+  textarea, select,
+  input:not([type="submit"]):not([type="reset"]):not([type="button"]) {
+    padding: calc(.25 * var(--lh)) calc(.5 * var(--lh));
+    background: var(--bg);
+    color: var(--tx);
+    border: 1px solid var(--border);
+    font-size: 1rem;
+    max-width: 100%;
+    margin-bottom: calc(.5 * var(--lh));
+  }
+
+  ol, ul {
+    padding-left: var(--lh);
+  }
+
+  li {
+    margin-top: calc(.25 * var(--lh));
+
+    &::marker {
+      color: var(--tx-muted);
+    }
+
+    & > time {
+      color: var(--tx-muted);
+    }
+  }
+
+  /* A dated list (the blog index) needs no numbers */
+  ol:has(> li > time) {
+    list-style: none;
+    padding-left: 0;
+  }
+
+  ul ul, ol ul, ul ol, ol ol {
+    margin-bottom: 0;
+  }
+
+  mark {
+    background: var(--tx);
+    color: var(--bg);
+    padding: 0 .25em;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  a img {
+    margin-bottom: 0;
+  }
+
+  figcaption {
+    font-size: var(--s-1);
+    color: var(--tx-muted);
+    margin-top: calc(.25 * var(--lh));
+  }
+
+  /* :has() — border under captions when figure contains media */
+  figure:has(img) figcaption,
+  figure:has(video) figcaption,
+  figure:has(picture) figcaption {
+    border-bottom: 1px solid var(--border);
+    padding-bottom: calc(.25 * var(--lh) - 1px);
+  }
+
+  /* @scope — article content styles, isolated from page-level selectors.
+     Baseline 2025 (Firefox 129+, Chrome 118+, Safari 17.4+).
+     Fallback: the scoped rules simply don't apply; base styles still hold. */
+  @scope (article) {
+    /* prose hyphenates (html lang="en" drives the dictionary);
+       hyphenate-limit-chars is ignored by Safari, which is fine */
+    p {
+      hyphens: auto;
+      hyphenate-limit-chars: 8 4 4;
+    }
+
+    /* links inside prose get a slightly more visible underline */
+    a {
+      text-decoration-color: var(--tx-muted);
+    }
+  }
+
+  /* Scroll-driven entry animations (no JS).
+     @supports guard ensures fallback is simply no animation, not a mis-fired one. */
+  @keyframes fade-in-up {
+    from { translate: 0 .75rem; }
+    to   { translate: 0 0; }
+  }
+
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      article > *:not(header) {
+        animation: fade-in-up linear both;
+        animation-timeline: view();
+        animation-range: entry 0% entry 18%;
+      }
+    }
+  }
+
+  /* Skip link — the first anchor in <body>, pointing at main.
+
+     Hidden with a transform rather than a percentage offset, so it never
+     depends on the containing block. Shown on :focus so it works everywhere,
+     then re-hidden on :focus:not(:focus-visible) in browsers that can tell
+     keyboard focus from pointer focus. main carries tabindex="-1" so that
+     activating the link actually moves focus off it; without that Firefox
+     leaves the link focused (and visible) after jumping to #main. */
+  body > a[href="#main"] {
+    position: absolute;
+    top: 0;
+    left: 0;
+    translate: 0 -100%;
+    padding: calc(.25 * var(--lh)) calc(.5 * var(--lh));
+    background: var(--tx);
+    color: var(--bg);
+    z-index: 100;
+    text-decoration: none;
+
+    &:focus {
+      translate: none;
+    }
+
+    &:focus:not(:focus-visible) {
+      translate: 0 -100%;
+    }
+  }
+
+  /* main is only ever focused programmatically via the skip link; the
+     content itself is the indicator, so no ring. */
+  main:focus {
+    outline: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *, *::before, *::after {
+      animation-duration: .01ms !important;
+      transition-duration: .01ms !important;
+    }
+  }
+}
+
+/* Print — chrome hidden, links expanded, no widows or split code blocks */
+@media print {
+  @page {
+    margin: 2cm;
+  }
+}
+
+@layer print {
+  @media print {
+    body > header,
+    body > footer,
+    body > a[href="#main"] {
+      display: none;
+    }
+
+    body {
+      font-size: 11pt;
+      line-height: 1.5;
+    }
+
+    main {
+      max-width: none;
+      padding: 0;
+    }
+
+    a {
+      text-decoration: none;
+    }
+
+    article a[href^="http"]::after {
+      content: " (" attr(href) ")";
+      font-size: .85em;
+      color: var(--tx-muted);
+      word-break: break-all;
+    }
+
+    pre {
+      white-space: pre-wrap;
+    }
+
+    pre, figure, blockquote, table, details {
+      break-inside: avoid;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      break-after: avoid;
+    }
+
+    p {
+      orphans: 3;
+      widows: 3;
+    }
+
+    article > * {
+      animation: none;
+    }
+
+    /* print collapsed <details> expanded */
+    details::details-content {
+      content-visibility: visible;
+    }
+  }
+}
