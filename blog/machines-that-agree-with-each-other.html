@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Machines That Agree With Each Other — Taimur Hasan</title>
+
+  <meta name="description" content="Agent instruction files are preferences an editor can ignore. The rules that protect my four Nix-managed machines live in the repository, where every editor meets them.">
+  <meta name="author" content="Taimur Hasan">
+  <meta name="robots" content="index, follow">
+  <meta name="color-scheme" content="dark light">
+
+  <meta property="og:title" content="Machines That Agree With Each Other">
+  <meta property="og:description" content="Agent instruction files are preferences an editor can ignore. The rules that protect my four Nix-managed machines live in the repository, where every editor meets them.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://tshasan.com/blog/machines-that-agree-with-each-other.html">
+  <meta property="article:author" content="Taimur Hasan">
+  <meta property="article:published_time" content="2026-09-01">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="@taimursh">
+  <meta name="twitter:title" content="Machines That Agree With Each Other">
+  <meta name="twitter:description" content="Agent instruction files are preferences an editor can ignore. The rules that protect my four Nix-managed machines live in the repository, where every editor meets them.">
+
+  <meta name="theme-color" content="#fff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#111" media="(prefers-color-scheme: dark)">
+
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="canonical" href="https://tshasan.com/blog/machines-that-agree-with-each-other.html">
+  <link rel="alternate" type="application/atom+xml" title="tshasan.com" href="/feed.xml">
+  <link rel="preload" href="/fonts/ibm-plex-sans-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/tshasan.css">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Machines That Agree With Each Other",
+    "description": "Agent instruction files are preferences an editor can ignore. The rules that protect my four Nix-managed machines live in the repository, where every editor meets them.",
+    "url": "https://tshasan.com/blog/machines-that-agree-with-each-other.html",
+    "datePublished": "2026-09-01",
+    "keywords": ["Nix", "NixOS", "nix-darwin", "Home Manager", "Claude Code", "CLAUDE.md", "CI", "Gitleaks", "guardrails"],
+    "author": {
+      "@type": "Person",
+      "name": "Taimur Hasan",
+      "url": "https://tshasan.com"
+    }
+  }
+  </script>
+</head>
+
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header>
+    <a href="/">/</a>
+    <nav aria-label="main">
+      <a href="/blog/">blog</a>
+      <a href="/elsewhere/">elsewhere</a>
+    </nav>
+  </header>
+
+  <main id="main">
+    <article>
+      <header>
+        <time datetime="2026-09-01">September 1, 2026</time>
+        <h1>Machines That Agree With Each Other</h1>
+      </header>
+
+      <p>
+        I keep a <code>CLAUDE.md</code> in my Nix configuration repository,
+        for now.
+      </p>
+
+      <p>
+        It explains the layout of the project, the commands that rebuild
+        each machine, and the decisions that are easy to get wrong. It tells
+        the agent not to invent custom NixOS options for values read in one
+        place. It discourages conditional wrappers where a direct assignment
+        would do. It explains why my work Mac is configured differently from
+        my personal Mac.
+      </p>
+
+      <p>
+        The file is useful, and it's the least durable part of the setup.
+        I'll replace Claude Code with another agent at some point. The next
+        tool may read a different instruction file, interpret the same
+        sentences differently, or ignore them in new ways. I'll also forget
+        some of my own rules, or convince myself a small change doesn't need
+        the full process.
+      </p>
+
+      <p>
+        Any constraint that protects my machines can't depend on the current
+        editor, human or otherwise, reading a document and complying. It has
+        to live in the repository.
+      </p>
+
+      <p>
+        The repository configures four machines: two NixOS hosts, a
+        personal Mac managed with nix-darwin and Home Manager, and a work
+        Mac where Home Manager owns the dotfiles and Homebrew owns the
+        software. Changes arrive from me, from a coding agent, and from a
+        dependency-update workflow. All three meet the same configuration
+        model and the same checks.
+      </p>
+
+      <p>
+        That's what I mean by machines agreeing with each other: the four
+        hosts, plus Nix, the formatter, the linters, the secret scanner, CI,
+        and the branch rules, all holding a diff to the same standard no
+        matter who produced it.
+      </p>
+
+      <p>
+        None of them proves a change is correct. Each answers a smaller
+        question. Nix asks whether the configuration evaluates. The
+        formatter asks whether the source has the expected shape. The
+        linters look for specific mistakes. The secret scanner looks for
+        credentials and private names. CI repeats the checks in a clean
+        environment, and the repository rules decide whether a failed check
+        blocks the merge.
+      </p>
+
+      <p>
+        None of these systems trusts the author much, which is useful now
+        that the author is hard to identify.
+      </p>
+
+      <h2>Rules are for steering</h2>
+
+      <p>The rules in my instruction file include:</p>
+
+      <figure>
+        <pre><code>No custom NixOS options (`lib.mkOption`) unless unavoidable.
+Direct assignment only.
+
+No `lib.mkIf`, `lib.mkMerge`, or `mkDefault` unless the logic
+genuinely requires it.
+
+No abstractions for hypothetical future users.
+
+IMPORTANT: Try to preserve the original code and the logic of
+the original code as much as possible</code></pre>
+      </figure>
+
+      <p>
+        These are good instructions. Without them a coding agent solves the
+        repository it wishes existed. It turns a value used once into a
+        typed option with a default, and three similar lines into a
+        framework. Ask it to add a package and it reorganizes the module
+        tree.
+      </p>
+
+      <p>
+        Writing my preferences down saves time. The first diff is better
+        and I stop repeating the same review comments.
+      </p>
+
+      <p>
+        The instruction file is still prose, though. The agent can
+        misunderstand it. A long session can push the relevant sentence out
+        of context. Two rules can conflict. The agent can follow the words
+        and miss the reason I wrote them. A human can skip the file without
+        noticing it exists.
+      </p>
+
+      <p>
+        Some preferences can't be tested at all. There's no reliable check
+        for "an abstraction for a hypothetical future user," and I'm not
+        going to build a classifier for taste. That kind of rule belongs in
+        documentation and review.
+      </p>
+
+      <p>
+        The distinction I care about is between preferences and invariants,
+        and it has nothing to do with whether a human or a machine wrote the
+        code. A preference describes how I'd like a change made. An
+        invariant describes what must still be true after the change.
+        Instruction files communicate preferences. Mechanisms enforce
+        invariants. A rule the editor can ignore is a suggestion with better
+        formatting.
+      </p>
+
+      <h2>The repository is the durable interface</h2>
+
+      <p>The entry point to my flake is small:</p>
+
+      <figure>
+        <pre><code>outputs =
+  inputs:
+  inputs.flake-parts.lib.mkFlake
+    { inherit inputs; }
+    (inputs.import-tree ./modules);</code></pre>
+      </figure>
+
+      <p>
+        <code>import-tree</code> loads the Nix files beneath
+        <code>modules/</code>, so <code>flake.nix</code> has no central list
+        to update when I add a flake-parts module. I can't create a module
+        and forget to wire it in.
+      </p>
+
+      <p>
+        It doesn't solve the other wiring problems. A newly loaded feature
+        still has to be enabled in the right host configuration, and a stray
+        Nix file under that directory gets loaded whether I meant it or not.
+        Mechanisms don't remove trade-offs. They let me pick which mistakes
+        are hard to make and which are obvious once made.
+      </p>
+
+      <p>
+        CI works the same way. For each of the four configurations, the
+        workflow asks Nix for the path of its top-level derivation:
+      </p>
+
+      <figure>
+        <pre><code>nix eval --raw \
+  .#nixosConfigurations.desktop.config.system.build.toplevel.drvPath
+
+nix eval --raw \
+  .#nixosConfigurations.vm.config.system.build.toplevel.drvPath
+
+nix eval --raw \
+  .#darwinConfigurations.personal-mac.config.system.build.toplevel.drvPath
+
+nix eval --raw \
+  .#homeConfigurations.work-mac.activationPackage.drvPath</code></pre>
+      </figure>
+
+      <p>Then it builds the repository's formatting and pre-commit checks:</p>
+
+      <figure>
+        <pre><code>nix build \
+  .#checks.x86_64-linux.treefmt \
+  .#checks.x86_64-linux.pre-commit</code></pre>
+      </figure>
+
+      <p>
+        Those checks run nixfmt, deadnix, statix, actionlint, and
+        Gitleaks. Together with the evaluation step they catch broken
+        option references, malformed modules, formatting drift, invalid
+        workflows, dead Nix code, and recognized secrets.
+      </p>
+
+      <p>
+        The same hook set also validates commit messages with commitizen,
+        but only on my machines at commit time. The CI derivation runs the
+        pre-commit stage and skips commit-msg hooks, so a bad commit
+        message reaches main if I bypass the hook locally.
+      </p>
+
+      <p>
+        Evaluating is weaker than building. Asking for a derivation path
+        shows Nix can evaluate the expression far enough to produce a build
+        plan. It doesn't build the system closure, boot the NixOS machines,
+        activate the Mac configuration, or prove the result does what I
+        intended.
+      </p>
+
+      <p>
+        A valid Nix configuration can disable SSH. It can drop a package I
+        still need, expose a service, replace a key, or make a bad
+        architectural decision, and evaluation passes. Nix verifies the
+        structure of the configuration. It can't infer my intent.
+      </p>
+
+      <p>
+        That gap matters more here than in a repository nobody deploys
+        automatically. The desktop and the personal Mac pull main and
+        switch to it unattended once a day, and the work Mac reapplies its
+        dotfiles at login. A change that evaluates cleanly and behaves
+        badly reaches three machines by the next morning.
+      </p>
+
+      <p>
+        I auto-merge narrow dependency updates once the checks pass. I don't
+        treat the same green check as permission to merge arbitrary changes
+        to storage, networking, accounts, or permissions. A daily workflow
+        bumps one flake input at a time, opens a pull request for each,
+        and enables auto-merge on it, and that's the extent of the
+        automation. Review isn't obsolete.
+        The mechanism is useful because its claim is narrow.
+      </p>
+
+      <h2>A mechanism has a scope</h2>
+
+      <p>My personal Mac configuration includes this nix-darwin setting:</p>
+
+      <figure>
+        <pre><code>homebrew.onActivation.cleanup = "zap";</code></pre>
+      </figure>
+
+      <p>
+        On activation, Homebrew removes formulas and casks the configuration
+        doesn't declare. Something I installed ad hoc and forgot about
+        doesn't become permanent. The next activation reconciles the machine
+        with the declared state.
+      </p>
+
+      <p>
+        My work Mac doesn't do that. Its Brewfile workflow is additive:
+        Homebrew installs what I declare, and cleanup is a separate command I
+        run after reading its output. I don't want a personal configuration
+        repository deleting software my employer manages. The README
+        documents the difference.
+      </p>
+
+      <p>
+        The rule is to make ownership explicit and reconcile only what this
+        system owns. A guardrail with no scope is an accident waiting to
+        happen.
+      </p>
+
+      <p>Git identity is a smaller example. My Git configuration sets:</p>
+
+      <figure>
+        <pre><code>user.useConfigOnly = true;</code></pre>
+      </figure>
+
+      <p>
+        The personal machines get their identity from the Nix
+        configuration. The work Mac reads an untracked, machine-local work
+        profile. If the expected identity is missing, Git refuses to invent
+        one from the local username and hostname.
+      </p>
+
+      <p>
+        That turns a quiet mistake into an immediate failure. Git doesn't
+        care whether the identity vanished because an agent edited the wrong
+        module, I misconfigured a new machine, or someone cloned the
+        repository and kept my values. It knows a required input is absent.
+      </p>
+
+      <p>
+        Secret scanning has a different boundary. The committed Gitleaks
+        rules run in the pre-commit checks and in CI. I also keep an
+        untracked <code>.gitleaks.local.toml</code> with private patterns:
+        employer domains, internal hostnames, project names that don't
+        belong in a public repository. The hook runs a second scan with that
+        file when it exists:
+      </p>
+
+      <figure>
+        <pre><code>gitleaks detect --no-git --redact --verbose
+
+if [ -f .gitleaks.local.toml ]; then
+  gitleaks detect \
+    --no-git \
+    --redact \
+    --verbose \
+    --config .gitleaks.local.toml
+fi</code></pre>
+      </figure>
+
+      <p>
+        The private rules run on machines I've configured. A clean GitHub
+        Actions checkout doesn't have them, and enforcing them remotely
+        would mean injecting the file into CI or writing equivalent
+        server-side rules.
+      </p>
+
+      <p>
+        That limitation is easy to miss when I describe the system by
+        feature: "I have secret scanning." The better description says
+        where the scan runs, with which rules, and on which paths into the
+        repository. A mechanism is only real where it executes.
+      </p>
+
+      <h2>A check can be a gate or an alarm</h2>
+
+      <p>
+        CI runs on pull requests and on pushes to main, unless the change
+        only touches Markdown. Branch protection requires the check on the
+        pull-request path, so a dependency update can't auto-merge until it
+        passes.
+      </p>
+
+      <p>
+        Direct pushes from me aren't gated. The protection doesn't apply to
+        administrators, and I'm the administrator, so a broken direct push
+        lands on main and CI reports the failure afterward.
+      </p>
+
+      <p>
+        On one path the check is a gate. On the other it's an alarm. The
+        YAML is identical. The difference is where the check sits relative
+        to the action it's meant to prevent.
+      </p>
+
+      <p>
+        The same applies outside GitHub. A test that runs after deployment
+        tells you production is broken and doesn't prevent it. A secret
+        scanner that runs after the commit helps you find the credential and
+        doesn't save you from rotating it. A configuration check that runs
+        after a machine switches makes the failure visible and leaves the
+        machine broken. Whether a check exists matters less than whether the
+        path you care about can route around it.
+      </p>
+
+      <p>
+        I don't describe my setup as making unreviewed changes "safe." It
+        reduces risk for specific changes on specific paths. That's a
+        smaller claim, and one I can defend.
+      </p>
+
+      <p>
+        It also hands me the next improvement: apply the protection to
+        administrators too, which is one checkbox on GitHub and forces my
+        own changes through the pull-request path, or accept that
+        direct-push CI is an alarm and say so.
+      </p>
+
+      <h2>The editor is temporary</h2>
+
+      <p>
+        I still keep the instruction file. It documents the architecture
+        and the choices I can't reduce to a test, for future me, for anyone
+        borrowing from the repository, and for whichever agent I use next.
+        It improves the starting point. I've stopped treating it as the
+        safety boundary.
+      </p>
+
+      <p>
+        An agent is an editor. It proposes a diff. A human contributor is
+        also an editor, and so am I. The repository shouldn't grant my
+        changes extra credibility because I typed them. I make syntax
+        errors. I forget imports. I commit with the wrong identity. I
+        install something temporarily and leave it behind. I misread the
+        scope of checks I wrote myself. Enforcement should be indifferent
+        to authorship.
+      </p>
+
+      <p>
+        Some preferences should stay preferences: whether an abstraction is
+        worth its cost, whether a dependency is justified, whether a valid
+        change makes the project easier to understand. Encoding all of that
+        in CI would produce a rigid, unpleasant codebase. But once I can
+        state a rule precisely and check it repeatedly, leaving it in prose
+        means choosing my memory as the enforcement mechanism.
+      </p>
+
+      <p>
+        I'll replace my current coding agent. Other people will change this
+        code. Future versions of me will change it tired, distracted, or
+        overconfident. The tools will change. The safety model shouldn't
+        have to. The goal is machines that agree with each other, whoever
+        writes the next change.
+      </p>
+
+      <hr>
+
+      <ul>
+        <li><a href="https://github.com/tshasan/nix" rel="noopener noreferrer" target="_blank">tshasan/nix on GitHub</a></li>
+        <li><a href="https://flake.parts/" rel="noopener noreferrer" target="_blank">flake.parts</a></li>
+        <li><a href="https://en.wikipedia.org/wiki/Poka-yoke" rel="noopener noreferrer" target="_blank">Poka-yoke</a></li>
+      </ul>
+
+    </article>
+
+  </main>
+
+  <footer>
+    <nav aria-label="contact and social links">
+      <a href="mailto:me@tshasan.com">email</a>
+      <a href="https://github.com/tshasan" rel="noopener noreferrer" target="_blank">github</a>
+      <a href="https://linkedin.com/in/taimurhasan1" rel="noopener noreferrer" target="_blank">linkedin</a>
+      <a href="https://x.com/taimursh" rel="noopener noreferrer" target="_blank">x / twitter</a>
+    </nav>
+  </footer>
+</body>
+</html>

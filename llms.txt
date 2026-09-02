@@ -12,6 +12,7 @@ This site is his personal home on the web: a place to share his work, his writin
 
 ## Selected writing
 
+- [Machines That Agree With Each Other](https://tshasan.com/blog/machines-that-agree-with-each-other.html): agent instruction files are preferences an editor can ignore; the rules that protect four Nix-managed machines live in the repository, where every editor meets them
 - [I Just Wanted to Make Something](https://tshasan.com/blog/i-just-wanted-to-make-something.html): on building with plain HTML and CSS, resisting unnecessary complexity, and using tools on your own terms
 
 ## Press
